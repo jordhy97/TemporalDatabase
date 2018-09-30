@@ -1,0 +1,5 @@
+[postgresql]
+    host=localhost
+    database=if4040-temporal
+    user=postgres
+    password=postgres
