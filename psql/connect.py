@@ -1,39 +1,34 @@
-from configparser import ConfigParser
-
 import psycopg2
+from configparser import ConfigParser
 
 # http://www.postgresqltutorial.com/postgresql-python/connect/
 
-def connect(filename):
-    """ Connect to the PostgreSQL database server """
-    conn = None
-    try:
-        # read connection parameters
-        params = config(filename=filename)
- 
-        # connect to the PostgreSQL server
-        print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
- 
-        # create a cursor
-        cur = conn.cursor()
-        
- # execute a statement
+class DB:
+    def __init__(self, filename='database.ini'):
+        self.params = config(filename)
+        self.conn = None
+
+    def __enter__(self):
+        try:
+            self.conn = psycopg2.connect(**self.params)
+
+        except psycopg2.DatabaseError as de:
+            raise
+
+        return self
+
+    def test(self):
+        cur = self.conn.cursor()
+
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
  
-        # display the PostgreSQL database server version
         db_version = cur.fetchone()
         print(db_version)
-       
-     # close the communication with the PostgreSQL
-        cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.conn is not None:
+            self.conn.close()
 
 
 def config(filename='database.ini', section='postgresql'):
@@ -50,8 +45,10 @@ def config(filename='database.ini', section='postgresql'):
             db[param[0]] = param[1]
     else:
         raise Exception('Section {0} not found in the {1} file'.format(section, filename))
- 
+    
     return db
  
 if __name__ == '__main__':
-    connect('../database.ini')
+    with DB('../database.ini') as db:
+        db.test()
+        

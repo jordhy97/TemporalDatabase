@@ -1,3 +1,1 @@
-from .connect import connect
-
-__all__ = ['connect']
+from .connect import DB
