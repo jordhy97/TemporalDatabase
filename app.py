@@ -62,6 +62,20 @@ def project():
 
     return json.dumps(res)
 
+@app.route('/union', methods=['POST'])
+def union():
+    data = request.get_json(silent=True)
+
+    table_names = data['tables']
+
+    res = db.union(table_names)
+    if res is not None:
+        for r in res:
+            r['valid_from'] = str(r['valid_from'])
+            r['valid_to'] = str(r['valid_to'])
+
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()

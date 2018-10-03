@@ -5,7 +5,7 @@
 -- Dumped from database version 10.3
 -- Dumped by pg_dump version 10.3
 
--- Started on 2018-09-30 23:06:07
+-- Started on 2018-10-03 21:20:17
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -26,7 +26,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2813 (class 0 OID 0)
+-- TOC entry 2807 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -39,7 +39,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 197 (class 1259 OID 24583)
+-- TOC entry 196 (class 1259 OID 32786)
 -- Name: dept; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -54,13 +54,13 @@ CREATE TABLE public.dept (
 ALTER TABLE public.dept OWNER TO postgres;
 
 --
--- TOC entry 196 (class 1259 OID 24578)
+-- TOC entry 197 (class 1259 OID 32789)
 -- Name: emp; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.emp (
-    instance character varying(30) NOT NULL,
     name character varying(30) NOT NULL,
+    instance character varying(30) NOT NULL,
     valid_from date NOT NULL,
     valid_to date NOT NULL
 );
@@ -69,7 +69,7 @@ CREATE TABLE public.emp (
 ALTER TABLE public.emp OWNER TO postgres;
 
 --
--- TOC entry 198 (class 1259 OID 24588)
+-- TOC entry 198 (class 1259 OID 32792)
 -- Name: mgr; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -84,8 +84,8 @@ CREATE TABLE public.mgr (
 ALTER TABLE public.mgr OWNER TO postgres;
 
 --
--- TOC entry 2804 (class 0 OID 24583)
--- Dependencies: 197
+-- TOC entry 2797 (class 0 OID 32786)
+-- Dependencies: 196
 -- Data for Name: dept; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -94,17 +94,17 @@ COPY public.dept (employee, department, valid_from, valid_to) FROM stdin;
 
 
 --
--- TOC entry 2803 (class 0 OID 24578)
--- Dependencies: 196
+-- TOC entry 2798 (class 0 OID 32789)
+-- Dependencies: 197
 -- Data for Name: emp; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.emp (instance, name, valid_from, valid_to) FROM stdin;
+COPY public.emp (name, instance, valid_from, valid_to) FROM stdin;
 \.
 
 
 --
--- TOC entry 2805 (class 0 OID 24588)
+-- TOC entry 2799 (class 0 OID 32792)
 -- Dependencies: 198
 -- Data for Name: mgr; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -113,34 +113,7 @@ COPY public.mgr (name, department, valid_from, valid_to) FROM stdin;
 \.
 
 
---
--- TOC entry 2679 (class 2606 OID 24587)
--- Name: dept dept_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.dept
-    ADD CONSTRAINT dept_pkey PRIMARY KEY (employee, department, valid_from, valid_to);
-
-
---
--- TOC entry 2677 (class 2606 OID 24582)
--- Name: emp emp_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.emp
-    ADD CONSTRAINT emp_pkey PRIMARY KEY (instance, name, valid_from, valid_to);
-
-
---
--- TOC entry 2681 (class 2606 OID 24592)
--- Name: mgr mgr_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mgr
-    ADD CONSTRAINT mgr_pkey PRIMARY KEY (valid_to, valid_from, department, name);
-
-
--- Completed on 2018-09-30 23:06:07
+-- Completed on 2018-10-03 21:20:17
 
 --
 -- PostgreSQL database dump complete

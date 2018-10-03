@@ -10,7 +10,7 @@
         ```
         GET /table?table=emp
         ```
-        ```json
+        ```
         [
             {
                 "instance": "Engineering",
@@ -46,7 +46,7 @@
             - `finished_by`
     - Response: `True` or `False` string
     - Example:
-        ```json
+        ```
         POST /allen
 
         {
@@ -74,7 +74,7 @@
 ## Temporal Algebra
 - **`POST`** `/select`
     - Parameters: JSON
-        ```json
+        ```
         {
             "data": [
                 {
@@ -89,7 +89,7 @@
         ```
     - Response: Query result as JSON list
     - Example:
-        ```json
+        ```
         POST /select
 
         {
@@ -108,7 +108,7 @@
             "table": "emp"
         }
         ```
-        ```json
+        ```
         [
             {"instance": "Engineering", "name": "Aubrey Matzke", "valid_from": "2015-11-18", "valid_to": "2018-08-24"},
             ...
@@ -117,7 +117,7 @@
         ```
 - **`POST`** `/project`
     - Parameters: JSON
-        ```json
+        ```
         {
             "table": table name,
             "col": column to project
@@ -125,7 +125,7 @@
         ```
     - Response: Query result as JSON list
     - Example:
-        ```json
+        ```
         POST /project
 
         {
@@ -133,10 +133,33 @@
             "col": "instance"
         }
         ```
-        ```json
+        ```
         [
             {"instance": "Engineering", "valid_from": "1970-11-24", "valid_to": "2018-10-02"},
             ...
             {"instance": "Human Resources", "valid_from": "1970-01-02", "valid_to": "2018-10-02"}
+        ]
+        ```
+- **`POST`** `/union`
+    - Parameters: JSON
+        ```
+        {
+            "tables": [list of table names]
+        }
+        ```
+    - Response: Query result as JSON list
+    - Example:
+        ```
+        POST /project
+
+        {
+            "tables": ["dept", "emp"]
+        }
+        ```
+        ```
+        [
+            {"employee": "Sky Bertrand", "department": "Product Management", "valid_from": "2015-08-03", "valid_to": "2038-05-27"},
+            ...
+            {"employee": "Alane Arrell", "department": "Human Resources", "valid_from": "2007-02-17", "valid_to": "2033-11-24"}
         ]
         ```
