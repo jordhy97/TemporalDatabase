@@ -76,6 +76,34 @@ def union():
 
     return json.dumps(res)
 
+@app.route('/set_difference', methods=['POST'])
+def set_difference():
+    data = request.get_json(silent=True)
+
+    table_names = data['tables']
+
+    res = db.set_difference(table_names)
+    if res is not None:
+        for r in res:
+            r['valid_from'] = str(r['valid_from'])
+            r['valid_to'] = str(r['valid_to'])
+
+    return json.dumps(res)
+
+@app.route('/join', methods=['POST'])
+def join():
+    data = request.get_json(silent=True)
+
+    table_names = data['tables']
+
+    res = db.join(table_names)
+    if res is not None:
+        for r in res:
+            r['valid_from'] = str(r['valid_from'])
+            r['valid_to'] = str(r['valid_to'])
+
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()

@@ -24,7 +24,7 @@ class DB:
         db_version = cur.fetchone()
         print(db_version)
 
-    from ._temporal_algebra import select_one_table, select, project, union
+    from ._temporal_algebra import select_one_table, select, project, union, set_difference, join
 
 
 def config(filename='database.ini', section='postgresql'):

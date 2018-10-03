@@ -163,3 +163,26 @@
             {"employee": "Alane Arrell", "department": "Human Resources", "valid_from": "2007-02-17", "valid_to": "2033-11-24"}
         ]
         ```
+- **`POST`** `/set_difference`
+    - Parameters: JSON
+        ```
+        {
+            "tables": [list of table names. First table name is the table subtracted from]
+        }
+        ```
+    - Response: Query result as JSON list
+    - Example:
+        ```
+        POST /project
+
+        {
+            "tables": ["dept", "emp"]
+        }
+        ```
+        ```
+        [
+            {"employee": "Sky Bertrand", "department": "Product Management", "valid_from": "2015-08-03", "valid_to": "2038-05-27"},
+            ...
+            {"employee": "Alane Arrell", "department": "Human Resources", "valid_from": "2007-02-17", "valid_to": "2033-11-24"}
+        ]
+        ```
