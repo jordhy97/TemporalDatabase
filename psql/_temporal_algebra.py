@@ -1,6 +1,7 @@
 import psycopg2
 import psycopg2.extras
-import intervals as I
+
+from .util import _merge_interval
 
 def select_one_table(self, table_name):
     try:
@@ -23,12 +24,8 @@ def select(self, table_name, query_clause):
     try:
         cur = self.conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
-        query = "SELECT * FROM {}".format(table_name)
-        for i, v in enumerate(query_clause):
-            if i == 0:
-                query += " WHERE {}.{} {} \'{}\'".format(table_name, v['col'], v['op'], v['val'])
-            else:
-                query += " AND {}.{} {} \'{}\'".format(table_name, v['col'], v['op'], v['val'])
+        query = "SELECT * FROM {} WHERE ".format(table_name) \
+            + " AND ".join(["{}.{} {} \'{}\'".format(table_name, v['col'], v['op'], v['val']) for v in query_clause])
 
         cur.execute(query)
         res = cur.fetchall()
@@ -70,11 +67,7 @@ def union(self, table_names):
         cur = self.conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
         # Fetch data from DB
-        query = ""
-        for i, t in enumerate(table_names):
-            if i > 0:
-                query += " UNION "
-            query += "SELECT * FROM {}".format(t)
+        query = " UNION ".join(["SELECT * FROM {}".format(t) for t in table_names])
 
         cur.execute(query)
         res = cur.fetchall()
@@ -208,42 +201,3 @@ def timeslice(self, table_name, time):
     except psycopg2.InternalError as ine:
         print(ine)
         self.conn.rollback()
-
-def _merge_interval(result_set, op='union'):
-    if len(result_set) == 0:
-        return result_set
-
-    attrs = [a for a in result_set[0].keys() if a not in ['valid_from', 'valid_to']]
-
-    # Merge intervals
-    res_interval_dict = dict()
-    for v in result_set:
-        k = []
-        for a in attrs:
-            k.append(v[a])
-        k = tuple(k)
-
-        try:
-            if op == 'subtract':
-                res_interval_dict[k] -= I.closed(v['valid_from'], v['valid_to'])
-            elif op == 'intersection':
-                res_interval_dict[k] &= I.closed(v['valid_from'], v['valid_to'])
-            else: # op == 'union'
-                res_interval_dict[k] |= I.closed(v['valid_from'], v['valid_to'])
-        except KeyError:
-            res_interval_dict[k] = I.closed(v['valid_from'], v['valid_to'])
-
-    # Convert back to list of dict
-    res = list()
-    for k, v in res_interval_dict.items():
-        for i in v:
-            item = dict()
-            for attr, val in zip(attrs, list(k)):
-                item[attr] = val
-
-            item['valid_from'] = i.lower
-            item['valid_to'] = i.upper
-
-            res.append(item)
-
-    return res

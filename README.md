@@ -173,7 +173,7 @@
         POST /union
 
         {
-            "tables": ["dept", "emp"]
+            "tables": ["dept", "mgr"]
         }
         ```
         ```json
@@ -368,4 +368,32 @@
                 "department": "Marketing"
             }
         ]
+        ```
+
+## Data Modification
+- **`POST`** `/insert`
+    - Parameters: JSON
+        ```
+        {
+            "data": data to insert,
+            "table": table to insert to
+        }
+        ```
+    - Response: Number of rows inserted
+    - Example:
+        ```json
+        POST /insert
+
+        {
+            "table": "mgr",
+            "data": {
+                "name": "Paulie Toulmin",
+                "department": "Training",
+                "valid_from": "2000-01-01",
+                "valid_to": "2030-01-01"
+            }
+        }
+        ```
+        ```
+        1
         ```

@@ -85,6 +85,7 @@ def union():
     return json.dumps(res)
 
 @app.route('/set_difference', methods=['POST'])
+@cross_origin()
 def set_difference():
     data = request.get_json(silent=True)
 
@@ -99,6 +100,7 @@ def set_difference():
     return json.dumps(res)
 
 @app.route('/join', methods=['POST'])
+@cross_origin()
 def join():
     data = request.get_json(silent=True)
 
@@ -113,6 +115,7 @@ def join():
     return json.dumps(res)
 
 @app.route('/timeslice', methods=['POST'])
+@cross_origin()
 def timeslice():
     data = request.get_json(silent=True)
 
@@ -125,6 +128,17 @@ def timeslice():
             r.pop('valid_from')
             r.pop('valid_to')
 
+    return json.dumps(res)
+
+@app.route('/insert', methods=['POST'])
+@cross_origin()
+def insert():
+    data = request.get_json(silent=True)
+
+    inserted_data = data['data']
+    table = data['table']
+
+    res = db.insert(table, inserted_data)
     return json.dumps(res)
 
 if __name__ == '__main__':
