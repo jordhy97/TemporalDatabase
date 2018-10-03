@@ -104,6 +104,21 @@ def join():
 
     return json.dumps(res)
 
+@app.route('/timeslice', methods=['POST'])
+def timeslice():
+    data = request.get_json(silent=True)
+
+    table_name = data['table']
+    time = data['time']
+
+    res = db.timeslice(table_name, time)
+    if res is not None:
+        for r in res:
+            r.pop('valid_from')
+            r.pop('valid_to')
+
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()

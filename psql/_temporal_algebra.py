@@ -183,6 +183,32 @@ def join(self, table_names):
         print(ine)
         self.conn.rollback()
 
+def timeslice(self, table_name, time):
+    try:
+        cur = self.conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
+
+        # Fetch data from DB
+        query = """
+            SELECT *
+            FROM {}
+            WHERE valid_from <= \'{}\'::date
+                AND valid_to >= \'{}\'::date
+        """.format(table_name, time, time)
+
+        cur.execute(query)
+        res = cur.fetchall()
+        cur.close()
+
+        return _merge_interval(res)
+
+    except psycopg2.InterfaceError as ie:
+        print(ie.message)
+        self.init_conn()
+
+    except psycopg2.InternalError as ine:
+        print(ine)
+        self.conn.rollback()
+
 def _merge_interval(result_set, op='union'):
     if len(result_set) == 0:
         return result_set
