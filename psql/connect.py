@@ -24,7 +24,7 @@ class DB:
         db_version = cur.fetchone()
         print(db_version)
 
-    from ._select import select_one_table
+    from ._select import select_one_table, select
 
 
 def config(filename='database.ini', section='postgresql'):

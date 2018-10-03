@@ -2,13 +2,13 @@
  Temporal Database Assignment for IF4040 Advanced Data Modelling
 
 # Endpoints
-- **`GET`** `/select`
+- **`GET`** `/table`
     - Parameters:
         - `table`: Table name
     - Response: Entire table in JSON
     - Example:
         ```
-        GET /select?table=emp
+        GET /table?table=emp
         ```
         ```json
         [
@@ -69,4 +69,49 @@
         ```
         ```
         True
+        ```
+
+## Temporal Algebra
+- **`POST`** `/select`
+    - Parameters: JSON
+        ```json
+        {
+            "data": [
+                {
+                    "col": column name,
+                    "op": binary operator ("=", "<", ...),
+                    "val": value to compare,
+                },
+                ...
+            ],
+            "table": table name
+        }
+        ```
+    - Response: Query result as JSON list
+    - Example:
+        ```json
+        POST /select
+
+        {
+            "data": [
+                {
+                    "col": "instance",
+                    "op": "=",
+                    "val": "Engineering"
+                },
+                {
+                    "col": "name",
+                    "op": "LIKE",
+                    "val": "A%"
+                }
+            ],
+            "table": "emp"
+        }
+        ```
+        ```json
+        [
+            {"instance": "Engineering", "name": "Aubrey Matzke", "valid_from": "2015-11-18", "valid_to": "2018-08-24"},
+            ...
+            {"instance": "Engineering", "name": "Amie Zapater", "valid_from": "2000-02-23", "valid_to": "2018-09-21"}
+        ]
         ```

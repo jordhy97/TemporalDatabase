@@ -12,7 +12,7 @@ db = DB(filename='database.ini')
 def hello():
     return "Hello World!"
 
-@app.route('/select', methods=['GET'])
+@app.route('/table', methods=['GET'])
 def select_table():
     table_name = request.values['table']
 
@@ -31,6 +31,21 @@ def compare_allen():
     i1 = ValidInterval(data['data'][1]['valid_from'], data['data'][1]['valid_to'])
 
     return str(Allen[data['op']](i0, i1))
+
+@app.route('/select', methods=['POST'])
+def select():
+    data = request.get_json(silent=True)
+
+    table_name = data['table']
+    query_clause = data['data']
+
+    res = db.select(table_name, query_clause)
+    if res is not None:
+        for r in res:
+            r['valid_from'] = str(r['valid_from'])
+            r['valid_to'] = str(r['valid_to'])
+
+    return json.dumps(res)
 
 if __name__ == '__main__':
     app.config['DEBUG'] = True
