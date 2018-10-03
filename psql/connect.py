@@ -7,15 +7,13 @@ class DB:
     def __init__(self, filename='database.ini'):
         self.params = config(filename)
         self.conn = None
+        self.init_conn()
 
-    def __enter__(self):
+    def init_conn(self):
         try:
             self.conn = psycopg2.connect(**self.params)
-
         except psycopg2.DatabaseError as de:
             raise
-
-        return self
 
     def test(self):
         cur = self.conn.cursor()
@@ -26,9 +24,7 @@ class DB:
         db_version = cur.fetchone()
         print(db_version)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self.conn is not None:
-            self.conn.close()
+    from ._select import select_one_table
 
 
 def config(filename='database.ini', section='postgresql'):
@@ -49,6 +45,5 @@ def config(filename='database.ini', section='postgresql'):
     return db
  
 if __name__ == '__main__':
-    with DB('../database.ini') as db:
-        db.test()
+    DB('../database.ini').test()
         
