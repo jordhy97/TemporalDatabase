@@ -379,10 +379,36 @@
             "table": table to insert to
         }
         ```
-    - Response: Number of rows inserted
+    - Response: Number of rows affected
     - Example:
         ```json
         POST /insert
+
+        {
+            "table": "mgr",
+            "data": {
+                "name": "Paulie Toulmin",
+                "department": "Training",
+                "valid_from": "2000-01-01",
+                "valid_to": "2030-01-01"
+            }
+        }
+        ```
+        ```
+        1
+        ```
+- **`POST`** `/delete`
+    - Parameters: JSON
+        ```
+        {
+            "data": data to delete,
+            "table": table to delete from
+        }
+        ```
+    - Response: Number of rows affected
+    - Example:
+        ```json
+        POST /delete
 
         {
             "table": "mgr",

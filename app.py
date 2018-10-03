@@ -141,6 +141,17 @@ def insert():
     res = db.insert(table, inserted_data)
     return json.dumps(res)
 
+@app.route('/delete', methods=['POST'])
+@cross_origin()
+def delete():
+    data = request.get_json(silent=True)
+
+    deleted_data = data['data']
+    table = data['table']
+
+    res = db.delete(table, deleted_data)
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()

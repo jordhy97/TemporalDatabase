@@ -25,7 +25,7 @@ class DB:
         print(db_version)
 
     from ._temporal_algebra import select_one_table, select, project, union, set_difference, join, timeslice
-    from ._data_modification import insert
+    from ._data_modification import insert, delete
 
 
 def config(filename='database.ini', section='postgresql'):
