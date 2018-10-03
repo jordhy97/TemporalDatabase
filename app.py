@@ -47,6 +47,21 @@ def select():
 
     return json.dumps(res)
 
+@app.route('/project', methods=['POST'])
+def project():
+    data = request.get_json(silent=True)
+
+    table_name = data['table']
+    col_name = data['col']
+
+    res = db.project(table_name, col_name)
+    if res is not None:
+        for r in res:
+            r['valid_from'] = str(r['valid_from'])
+            r['valid_to'] = str(r['valid_to'])
+
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()

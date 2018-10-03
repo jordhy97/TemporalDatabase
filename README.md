@@ -115,3 +115,28 @@
             {"instance": "Engineering", "name": "Amie Zapater", "valid_from": "2000-02-23", "valid_to": "2018-09-21"}
         ]
         ```
+- **`POST`** `/project`
+    - Parameters: JSON
+        ```json
+        {
+            "table": table name,
+            "col": column to project
+        }
+        ```
+    - Response: Query result as JSON list
+    - Example:
+        ```json
+        POST /project
+
+        {
+            "table": "emp",
+            "col": "instance"
+        }
+        ```
+        ```json
+        [
+            {"instance": "Engineering", "valid_from": "1970-11-24", "valid_to": "2018-10-02"},
+            ...
+            {"instance": "Human Resources", "valid_from": "1970-01-02", "valid_to": "2018-10-02"}
+        ]
+        ```
