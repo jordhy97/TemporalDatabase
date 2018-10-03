@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin 
 from psql import DB
 import json
 from allen import Allen, ValidInterval
@@ -6,6 +7,8 @@ from allen import Allen, ValidInterval
 from allen import Allen
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = DB(filename='database.ini')
 
 @app.route('/')
@@ -13,6 +16,7 @@ def hello():
     return "Hello World!"
 
 @app.route('/table', methods=['GET'])
+@cross_origin()
 def select_table():
     table_name = request.values['table']
 
@@ -24,6 +28,7 @@ def select_table():
     return json.dumps(res)
 
 @app.route('/allen', methods=['POST'])
+@cross_origin()
 def compare_allen():
     data = request.get_json(silent=True)
 
@@ -33,6 +38,7 @@ def compare_allen():
     return str(Allen[data['op']](i0, i1))
 
 @app.route('/select', methods=['POST'])
+@cross_origin()
 def select():
     data = request.get_json(silent=True)
 
@@ -48,6 +54,7 @@ def select():
     return json.dumps(res)
 
 @app.route('/project', methods=['POST'])
+@cross_origin()
 def project():
     data = request.get_json(silent=True)
 
@@ -63,6 +70,7 @@ def project():
     return json.dumps(res)
 
 @app.route('/union', methods=['POST'])
+@cross_origin()
 def union():
     data = request.get_json(silent=True)
 
