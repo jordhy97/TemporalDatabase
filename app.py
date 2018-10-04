@@ -6,6 +6,7 @@ import psycopg2
 from allen import Allen, ValidInterval
 
 from allen import Allen
+from allen.allen_predicate_generator import *
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -338,12 +339,12 @@ def query():
 
     except psycopg2.InterfaceError as ie:
         print(ie.message)
-        self.init_conn()
+        db.init_conn()
         return '{}'
 
     except psycopg2.InternalError as ine:
         print(ine)
-        self.conn.rollback()
+        db.conn.rollback()
         return '{}'
 
     except:
@@ -351,4 +352,5 @@ def query():
 
 if __name__ == '__main__':
     app.config['DEBUG'] = True
+    print(is_before('2008-01-01', '2008-01-01', '2008-01-01', '2008-01-01'))
     app.run()
