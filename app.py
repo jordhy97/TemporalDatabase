@@ -87,7 +87,7 @@ def temporal_projection(relation, attributes):
             ' AND NOT EXISTS ( SELECT * FROM ' + relation + ' AS T2'
             ' WHERE ' + temporal_projection_condition(attributes, 'T2', 'F') + ' AND'
             ' ( (T2.valid_from < F.valid_from AND F.valid_from <= T2.valid_to)'
-            ' OR (T2.valid_from <= L.valid_to AND L.valid_to < T2.valid_to) ) )')
+            ' OR (T2.valid_from <= L.valid_to AND L.valid_to <  T2.valid_to) ) )')
 
 def temporal_union(relation1, relation2, relation1_alias = None, relation2_alias = None):
     query = temporal_selection(relation1, relation_alias=relation1_alias) + ' UNION ALL ' + temporal_selection(relation2, relation_alias=relation2_alias)
@@ -165,7 +165,7 @@ def temporal_join(relation1, relation2, relation1_alias = None, relation2_alias 
 def valid_timeslice(relation, valid_time, relation_alias=None):
     non_temporal_attributes = get_non_temporal_attributes(relation, relation_alias)
     return ('SELECT ' + ', '.join(non_temporal_attributes) +  ' FROM ' + convert_relation(relation, relation_alias) + ' WHERE'
-            ' valid_from <= \'' + valid_time + '\'::date AND \'' + valid_time + '\'::date < valid_to')
+            ' valid_from <= \'' + valid_time + '\' AND \'' + valid_time + '\' <= valid_to')
 
 @app.route('/table', methods=['GET'])
 @cross_origin()
@@ -352,5 +352,4 @@ def query():
 
 if __name__ == '__main__':
     app.config['DEBUG'] = True
-    print(is_before('2008-01-01', '2008-01-01', '2008-01-01', '2008-01-01'))
     app.run()
