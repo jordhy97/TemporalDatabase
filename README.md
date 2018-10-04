@@ -472,7 +472,24 @@
         - temporal_join(relation1, relation2, relation1_alias = None, relation2_alias = None)
         - valid_timeslice(relation, valid_time, relation_alias=None)
 
-        Notes: relation in the parameter can be a query or relation name,  relation_alias is needed if relation is a query
+    - allen predicates that can be used in query:
+        - is_before(range1_start, range1_end, range2_start, range2_end)
+        - is_after(range1_start, range1_end, range2_start, range2_end)
+        - is_equal(range1_start, range1_end, range2_start, range2_end)
+        - meet(range1_start, range1_end, range2_start, range2_end)
+        - is_met_by(range1_start, range1_end, range2_start, range2_end)
+        - overlap(range1_start, range1_end, range2_start, range2_end)
+        - is_overlapped_by(range1_start, range1_end, range2_start, range2_end)
+        - is_during(range1_start, range1_end, range2_start, range2_end)
+        - contain(range1_start, range1_end, range2_start, range2_end)
+        - start(range1_start, range1_end, range2_start, range2_end)
+        - is_started_by(range1_start, range1_end, range2_start, range2_end)
+        - finish(range1_start, range1_end, range2_start, range2_end)
+        - is_finished_by(range1_start, range1_end, range2_start, range2_end)
+    - Notes:
+        - relation in the parameter can be a query or relation name
+        - relation_alias is needed if relation is a query
+        - range in allen predicate can be a date string or date attributes in relation (valid_from and valid_to)
 
     - Response: Result of query or empty if invalid
     - Example:
