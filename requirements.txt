@@ -1,2 +1,5 @@
+Flask_Cors==3.0.3
+python_intervals==1.6.0
 psycopg2==2.7.5
 Flask==0.12.2
+intervals==0.8.1
