@@ -1,7 +1,13 @@
 # TemporalDatabase
  Temporal Database Assignment for IF4040 Advanced Data Modelling
 
-# Endpoints
+## Setup
+- Install dependencies
+    ```
+    pip install -r requirements.txt
+    ```
+
+## Endpoints
 - **`GET`** `/table`
     - Parameters:
         - `table`: Table name
@@ -46,7 +52,7 @@
             - `finished_by`
     - Response: `True` or `False` string
     - Example:
-        ```
+        ```json
         POST /allen
 
         {
@@ -71,7 +77,7 @@
         True
         ```
 
-## Temporal Algebra
+### Temporal Algebra
 - **`POST`** `/select`
     - Parameters: JSON
         ```
@@ -370,7 +376,7 @@
         ]
         ```
 
-## Data Modification
+### Data Modification
 - **`POST`** `/insert`
     - Parameters: JSON
         ```
@@ -417,6 +423,34 @@
                 "department": "Training",
                 "valid_from": "2000-01-01",
                 "valid_to": "2030-01-01"
+            }
+        }
+        ```
+        ```
+        1
+        ```
+- **`POST`** `/update`
+    - Parameters: JSON
+        ```
+        {
+            "table": table to delete from,
+            "values": updated values,
+            "condition": data to update,
+        }
+        ```
+    - Response: Number of rows affected
+    - Example:
+        ```json
+        POST /update
+
+        {
+            "table": "mgr",
+            "values": {
+                "name": "Supporter",
+                "valid_from": "2000-01-01"
+            },
+            "condition": {
+                "department": "Support"
             }
         }
         ```

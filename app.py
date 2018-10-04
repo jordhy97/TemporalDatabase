@@ -152,6 +152,18 @@ def delete():
     res = db.delete(table, deleted_data)
     return json.dumps(res)
 
+@app.route('/update', methods=['POST'])
+@cross_origin()
+def update():
+    data = request.get_json(silent=True)
+
+    table = data['table']
+    updated_values = data['values']
+    update_condition = data['condition']
+
+    res = db.update(table, updated_values, update_condition)
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.config['DEBUG'] = True
     app.run()
