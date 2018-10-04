@@ -39,7 +39,11 @@ def insert(self, table_name, values):
             + ", ".join(["(\'{}\')".format("\', \'".join([str(i) for i in item.values()])) for item in existing_res])
         
         cur.execute(query)
-        return cur.rowcount
+        res = cur.rowcount
+        self.conn.commit()
+        cur.close()
+
+        return res
 
     except psycopg2.InterfaceError as ie:
         print(ie.message)
@@ -78,14 +82,20 @@ def delete(self, table_name, values):
             + " AND ".join(["{} = \'{}\'".format(c, values[c]) for c in col_names])
 
         cur.execute(query)
+        res = cur.rowcount
 
         # Insert new data
         if existing_res:
             query = "INSERT INTO {} VALUES ".format(table_name) \
                 + ", ".join(["(\'{}\')".format("\', \'".join([str(i) for i in item.values()])) for item in existing_res])
         
-        cur.execute(query)
-        return cur.rowcount
+            cur.execute(query)
+            res = cur.rowcount
+            
+        self.conn.commit()
+        cur.close()
+
+        return res
 
     except psycopg2.InterfaceError as ie:
         print(ie.message)
