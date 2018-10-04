@@ -25,7 +25,8 @@ def select(self, table_name, query_clause):
         cur = self.conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 
         query = "SELECT * FROM {} WHERE ".format(table_name) \
-            + " AND ".join(["{}.{} {} \'{}\'".format(table_name, v['col'], v['op'], v['val']) for v in query_clause])
+                + " AND ".join(["{}.{} {} \'{}\'".format(table_name, v['col'], v['op'], v['val'])
+                                for v in query_clause])
 
         cur.execute(query)
         res = cur.fetchall()
@@ -95,26 +96,21 @@ def set_difference(self, table_names):
             col_names[t] = [a for a in cur.fetchone().keys() if a not in ['valid_from', 'valid_to']]
 
         # Get base query data
-        query = "SELECT * FROM {}".format(table_names[0])
-
-        # Get subtracted data
-        for t in table_names:
-            if t == table_names[0]:
-                continue
-            else:
-                query += " UNION "
-            
-            query += "SELECT * FROM {} WHERE ".format(t)
-            for i, (c, cdiff) in enumerate(zip(col_names[t], col_names[table_names[0]])):
-                if i > 0:
-                    query += " AND "
-                query += "{} IN (SELECT {} FROM {})".format(c, cdiff, table_names[0])
+        query = "SELECT * FROM {}".format(table_names[0]) \
+                + "".join([" UNION SELECT * FROM {} WHERE {}".format(
+                        t,
+                        " AND ".join(["{} IN (SELECT {} FROM {})".format(
+                            c,
+                            cdiff,
+                            table_names[0]
+                        ) for i, (c, cdiff) in enumerate(zip(col_names[t], col_names[table_names[0]]))
+                    ])) for t in table_names[1:]
+                ])
 
         cur.execute(query)
         res = cur.fetchall()
 
         cur.close()
-        print(res)
 
         return _merge_interval(res, op='subtract')
 
@@ -141,26 +137,17 @@ def join(self, table_names):
         result_col_names.extend(['valid_from', 'valid_to'])
 
         # Fetch data from DB
-        query = ""
-        for i, base_table in enumerate(table_names):
-            if i > 0:
-                query += " UNION "
-
-            query += "SELECT "
-            for j, c in enumerate(result_col_names):
-                if j > 0:
-                    query += ", "
-                query += c
-            query += " FROM {}".format(base_table)
-
-            for t in table_names:
-                if t != base_table:
-                    query += " NATURAL JOIN (SELECT "
-                    for j, c in enumerate(col_names[t]):
-                        if j > 0:
-                            query += ", "
-                        query += c
-                    query += " FROM {}) AS {}_subquery".format(t, t)
+        query = " UNION ".join([
+            "SELECT {} FROM {}{}".format(
+                ", ".join([c for c in result_col_names]),
+                base_table,
+                "".join([" NATURAL JOIN (SELECT {} FROM {}) AS {}_subquery".format(
+                    ", ".join([c for c in col_names[t]]),
+                    t,
+                    t
+                ) for t in table_names if t != base_table
+            ])) for base_table in table_names
+        ])
         
         cur.execute(query)
         res = cur.fetchall()
