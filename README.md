@@ -457,3 +457,29 @@
         ```
         1
         ```
+- **`POST`** `/query`
+    - Parameters: JSON
+        ```
+        {
+            "query": query to execute in dbms
+        }
+        ```
+    - supported query:
+        - temporal_selection(relation, predicates=None, relation_alias=None)
+        - temporal_projection(relation, attributes)
+        - temporal_union(relation1, relation2, relation1_alias = None, relation2_alias = None)
+        - temporal_difference(relation1, relation2, relation1_alias = None, - relation2_alias = None)
+        - temporal_join(relation1, relation2, relation1_alias = None, relation2_alias = None)
+        - valid_timeslice(relation, valid_time, relation_alias=None)
+
+        Notes: relation in the parameter can be a query or relation name,  relation_alias is needed if relation is a query
+
+    - Response: Result of query or empty if invalid
+    - Example:
+        ```json
+        POST /query
+
+        {
+            "query": "temporal_projection('dept', ['employee'])"
+        }
+        ```
